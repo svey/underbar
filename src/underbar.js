@@ -101,11 +101,13 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    return _.filter(array, function(item, index){
+    var uniqArray = []
+    _.each(array, function(item, index){
       if(_.indexOf(array, item) === index){
-        return item
+        return uniqArray.push(item);
       }
     })
+    return uniqArray;
   };
 
 
@@ -259,8 +261,8 @@
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
-    _.each(arguments, function(addProp) {
-      for(var key in addProp) {
+    _.each(arguments, function(addProp){
+      for(var key in addProp){
         if(!(key in obj)){
           obj[key] = addProp[key];
         }
@@ -310,6 +312,14 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var cache = {};
+    return function(){
+      var value = [[].slice.call(arguments), arguments.length];
+      if(cache[value] === undefined){
+        cache[value] = func.apply(this, arguments);
+      }
+      return cache[value];
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -319,6 +329,10 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var args = [].slice.call(arguments, 2);
+    return setTimeout(function() {
+      return func.apply(null, args);
+    }, wait);
   };
 
 
@@ -332,8 +346,29 @@
   // TIP: This function's test suite will ask that you not modify the original
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
+
   _.shuffle = function(array) {
+    var newArray = array.slice();
+    _.each(newArray, function(value, index){
+      var randomIndex = Math.floor(Math.random() * newArray.length);
+      var randomValue = newArray[randomIndex];
+      newArray[index] = randomValue;
+      newArray[randomIndex] = value;
+    });
+    return newArray;
   };
+
+  // _.shuffle = function(array) {
+  //   var shuffledArray = [];
+  //   _.each(array, function(item, index){
+  //     var randomIndex = Math.floor(Math.random() * (array.length - 0) + 0);
+  //     console.log(randomIndex);
+  //     shuffledArray.push(array[randomIndex]);
+  //     console.log(randomIndex);
+  //     array.splice(array[randomIndex, 1]);
+  //   })
+  //   return shuffledArray;
+  // };
 
 
   /**
