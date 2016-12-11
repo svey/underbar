@@ -19,7 +19,7 @@
    * number of values--either an array or an object.
    *
    *
-   * IMPORTANT NOTE!
+   * IMPORTANT NOTE!!
    * ===========
    *
    * The .first function is implemented for you, to help guide you toward success
